@@ -12,13 +12,9 @@ export class TasksEffects {
 
   getTasks$ = createEffect(() => this.actions$.pipe(
     ofType(TasksActions.getTasks),
-    switchMap(() => this.service.get()
-      .pipe(catchError(() => of(TasksActions.apiError({message: 'Oops! Something go wrong a'}))))
-    ),
-    map(tasks => {
-      console.log(tasks);
-      return [];
-    }),
-    map(tasks => TasksActions.setTasks({tasks: tasks}))
+    switchMap(() => this.service.get().pipe(
+      map(tasks => TasksActions.setTasks({tasks: tasks})),
+      catchError(() => of(TasksActions.apiError({message: 'Oops! Something go wrong a'})))
+    ))
   ));
 }

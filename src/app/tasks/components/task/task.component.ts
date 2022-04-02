@@ -10,7 +10,7 @@ import {Task} from "../../models";
   styleUrls: ['./task.component.css']
 })
 export class TaskComponent implements OnInit {
-  @Input() task: Task;
+  @Input() task!: Task;
 
   constructor(private store: Store<fromApp.AppState>) {
   }
@@ -19,6 +19,6 @@ export class TaskComponent implements OnInit {
   }
 
   onToggleTask() {
-    this.store.dispatch(TasksActions.toggleTask(this.task));
+    this.store.dispatch(TasksActions.toggleTask({task: this.task}));
   }
 }

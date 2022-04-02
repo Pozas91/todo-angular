@@ -1,5 +1,5 @@
-import * as fromTasks from './tasks.reducer';
+import * as tasksReducers from './tasks.reducer';
 
 export {
-  fromTasks
+  tasksReducers
 };

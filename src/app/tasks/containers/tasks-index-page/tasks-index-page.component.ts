@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Store} from "@ngrx/store";
 import {fromApp} from "../../../reducers";
 import {TasksActions} from "../../actions";
-import {Subscription} from "rxjs";
+import {selectTasks} from "../../selectors/tasks.selectors";
 
 @Component({
   selector: 'app-tasks',
@@ -12,8 +12,7 @@ import {Subscription} from "rxjs";
 })
 export class TasksIndexPageComponent implements OnInit {
   isLoading = false;
-  tasks: Task[] = [];
-  storeSub: Subscription;
+  tasks$ = this.store.select(selectTasks);
 
   constructor(private router: Router, private route: ActivatedRoute, private store: Store<fromApp.AppState>) {
   }
@@ -21,9 +20,9 @@ export class TasksIndexPageComponent implements OnInit {
   ngOnInit(): void {
     this.store.dispatch(TasksActions.getTasks());
 
-    this.storeSub = this.store.select('tasks').subscribe(tasksState => {
-      this.tasks = tasksState.tasks;
-      this.isLoading = tasksState.loading;
+    this.tasks$.subscribe(state => {
+      this.tasks = state.tasks;
+      this.isLoading = state.loading;
     })
   }
 

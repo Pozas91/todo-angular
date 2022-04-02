@@ -8,7 +8,7 @@ export const TOGGLE_TASK = '[Tasks] Toggle task';
 export const API_ERROR = '[Tasks] Api Error';
 export const API_SUCCESS = '[Tasks] Api Success';
 
-export const setTasks = createAction(SET_TASKS, props<{ tasks: Task[] }>());
+export const setTasks = createAction(SET_TASKS, props<{ tasks: ReadonlyArray<Task> }>());
 export const getTasks = createAction(GET_TASKS);
 export const addTask = createAction(ADD_TASK, props<{ task: Task }>());
 export const toggleTask = createAction(TOGGLE_TASK, props<{ task: Task }>());

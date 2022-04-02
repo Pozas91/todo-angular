@@ -6,7 +6,10 @@ import {CoreModule} from "./core/core.module";
 import {TasksModule} from "./tasks/tasks.module";
 import {RoutingModule} from "./routing.module";
 import {AppComponent} from "./core/containers/app/app.component";
-import { TaskComponent } from './tasks/components/task/task.component';
+import {TaskComponent} from './tasks/components/task/task.component';
+import {StoreModule} from "@ngrx/store";
+import {fromApp} from "./reducers";
+import {EffectsModule} from "@ngrx/effects";
 
 @NgModule({
   imports: [
@@ -15,7 +18,10 @@ import { TaskComponent } from './tasks/components/task/task.component';
     FormsModule,
     CoreModule,
     TasksModule,
-    RoutingModule
+    RoutingModule,
+    // Store & actions
+    StoreModule.forRoot(fromApp.appReducer),
+    EffectsModule.forRoot([])
   ],
   providers: [],
   bootstrap: [AppComponent],
