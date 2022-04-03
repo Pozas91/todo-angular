@@ -1,23 +1,31 @@
 import {NgModule} from "@angular/core";
 import {RouterModule} from "@angular/router";
-import {EffectsModule} from "@ngrx/effects";
-import {TasksEffects} from "./effects/tasks.effects";
 import {TasksPageComponent} from "./containers/tasks-page/tasks-page.component";
 import {CommonModule} from "@angular/common";
+import {TasksIndexPageComponent} from "./containers/tasks-index-page/tasks-index-page.component";
+import {TaskComponent} from "./components/task/task.component";
+import {FormsModule} from "@angular/forms";
+import {TasksRoutingModule} from "./tasks-routing";
+import {MatGridListModule} from "@angular/material/grid-list";
+import {MatListModule} from "@angular/material/list";
 
 export const COMPONENTS = [
-  TasksPageComponent
+  TaskComponent,
+  TasksPageComponent,
+  TasksIndexPageComponent,
 ];
 
 @NgModule({
   declarations: COMPONENTS,
   imports: [
-    // This module import basic Angular directives
     CommonModule,
-    // This module import routing functionalities
     RouterModule,
-    // This module adds effects
-    EffectsModule.forFeature([TasksEffects])
+    FormsModule,
+    // My module for routing
+    TasksRoutingModule,
+    // Some styles
+    MatGridListModule,
+    MatListModule
   ]
 })
 

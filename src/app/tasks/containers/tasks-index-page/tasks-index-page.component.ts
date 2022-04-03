@@ -1,32 +1,77 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {Store} from "@ngrx/store";
-import {fromApp} from "../../../reducers";
-import {TasksActions} from "../../actions";
-import {selectTasks} from "../../selectors/tasks.selectors";
+import {TasksService} from "../../services/tasks.service";
+import {Task} from "../../models";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks-index-page.component.html',
-  styleUrls: ['./tasks-index-page.component.css']
+  styleUrls: ['./tasks-index-page.component.css'],
+  providers: [TasksService]
 })
 export class TasksIndexPageComponent implements OnInit {
   isLoading = false;
-  tasks$ = this.store.select(selectTasks);
+  completedTasks: Array<Task>;
+  pendingTasks: Array<Task>;
+  message: string;
+  task = {
+    text: ''
+  };
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: Store<fromApp.AppState>) {
+  constructor(private router: Router, private route: ActivatedRoute, private service: TasksService) {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(TasksActions.getTasks());
+    this.loadTasks();
+  }
 
-    this.tasks$.subscribe(state => {
-      this.tasks = state.tasks;
-      this.isLoading = state.loading;
+  loadTasks() {
+    // Loading information
+    this.isLoading = true;
+
+    this.service.get().subscribe({
+      next: data => {
+        if (data && data.length > 0) {
+
+          this.completedTasks = [];
+          this.pendingTasks = [];
+
+          data.forEach(task => {
+            if (task.isCompleted) {
+              this.completedTasks.push(task);
+            } else {
+              this.pendingTasks.push(task);
+            }
+          });
+        } else {
+          this.message = 'Cannot load previous tasks';
+        }
+
+        // Load completed
+        this.isLoading = false;
+      },
+      error: err => {
+        this.message = err.message
+
+        // Load completed
+        this.isLoading = false;
+      }
+    });
+  }
+
+  onSubmit(form: NgForm) {
+    if (form.invalid) {
+      return;
+    }
+
+    this.service.create(this.task.text).subscribe({
+      next: value => this.loadTasks(),
+      error: err => this.message = err.message
     })
   }
 
-  ngOnDestroy(): void {
-    this.storeSub.unsubscribe();
+  update() {
+    this.loadTasks();
   }
 }

@@ -6,28 +6,21 @@ import {CoreModule} from "./core/core.module";
 import {TasksModule} from "./tasks/tasks.module";
 import {RoutingModule} from "./routing.module";
 import {AppComponent} from "./core/containers/app/app.component";
-import {TaskComponent} from './tasks/components/task/task.component';
-import {StoreModule} from "@ngrx/store";
-import {fromApp} from "./reducers";
-import {EffectsModule} from "@ngrx/effects";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    // My modules
     CoreModule,
     TasksModule,
     RoutingModule,
-    // Store & actions
-    StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([])
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
-  declarations: [
-    TaskComponent
-  ]
 })
 export class AppModule {
 }

@@ -1,8 +1,41 @@
-<div *ngIf="!isLoading">
-  <p>Loading tasks</p>
+<div class="center">
+  <h1>Welcome to your simple ToDo list application</h1>
+
+  <form #createForm="ngForm" (ngSubmit)="onSubmit(createForm)">
+    <div class="form-group">
+      <label for="title">Description</label>
+      <input type="text" class="form-control" id="title" name="title" [(ngModel)]="task.text" #text="ngModel"
+             minlength="3" [class.is-invalid]="text.invalid" required/>
+
+      <div *ngIf="text.invalid && (text.dirty || text.touched)" class="invalid-feedback">
+        <div *ngIf="text.errors['required']">
+          Title is required.
+        </div>
+
+        <div *ngIf="text.errors['minlength']">
+          Title must be have at least {{text.errors['minlength'].requiredLength}} characters length.
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success" [disabled]="createForm.invalid">Add</button>
+  </form>
+
+  <div *ngIf="message">
+    There is an error loading tasks information, sorry
+  </div>
+
+  <div *ngIf="isLoading">
+    <p>Loading tasks</p>
+  </div>
+
+  <h2>Completed tasks!</h2>
+  <ul *ngIf="!isLoading">
+    <app-task *ngFor="let task of completedTasks" [task]="task" (update)="update()"></app-task>
+  </ul>
+
+  <h2>Pending tasks</h2>
+  <ul *ngIf="!isLoading">
+    <app-task *ngFor="let task of pendingTasks" [task]="task" (update)="update()"></app-task>
+  </ul>
 </div>
-
-
-<ul>
-  <app-task *ngFor="let task of tasks" [task]="task"></app-task>
-</ul>

@@ -1,8 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Store} from "@ngrx/store";
-import {fromApp} from "../../../reducers";
-import {TasksActions} from "../../actions";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Task} from "../../models";
+import {TasksService} from "../../services/tasks.service";
 
 @Component({
   selector: 'app-task',
@@ -10,15 +8,19 @@ import {Task} from "../../models";
   styleUrls: ['./task.component.css']
 })
 export class TaskComponent implements OnInit {
-  @Input() task!: Task;
+  @Input() task: Task | any;
+  @Output() update = new EventEmitter<string>();
 
-  constructor(private store: Store<fromApp.AppState>) {
+  constructor(private service: TasksService) {
   }
 
   ngOnInit(): void {
   }
 
   onToggleTask() {
-    this.store.dispatch(TasksActions.toggleTask({task: this.task}));
+    this.service.toggle(this.task.id).subscribe({
+      next: value => this.update.emit('completed'),
+      error: err => this.update.emit(err.message),
+    })
   }
 }
